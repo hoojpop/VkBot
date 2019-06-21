@@ -2,7 +2,7 @@
 
 Бот реализован на языке програмирования [Python](https://www.python.org/). Предназначен бот для сампа, код в открытом доступе, делайте что хотите, но со временем будет дополняться.
 
-[Лог изменений clipboard ](https://github.com/hoojpop/VkBot/blob/master/log.md)
+[Лог изменений :clipboard: ](https://github.com/hoojpop/VkBot/blob/master/log.md)
 
 `v1.0` - Release./
 `v1.1` - 16.06.19 /
