@@ -10,49 +10,61 @@ v1.0 - Rls:
 v1.1 - 16.06.19:
 - Бот начал уведомлять о "каптах" каждые два часа, начиная с 1:00 до 23:00.
 - Бот начал изменять чат, текст пока можно будет поменять в коде, но со временем добавлю команду. Которая, запомнит ваше название и к названию будет добавлять время, когда следующий "капт": 1:00 / "НАЗВАНИЕ".
-- Маленькая фича, бот уведомляет, когда начинатеся утро и ночь
+- Маленькая фича, бот уведомляет, когда начинатеся утро и ночь.
+
+v1.2 - 21.06.19
+- Теперь бот может изменять название вашей беседы, одной командой. @ Название. Для этого нужно выдать администратора боту.
+- Вам кто-то надоел? Кто-то нарушил правила в вашей беседе? Командой !кик и указав ID пользователя, вы сможете исключить его из вашей беседы. !кик 99999999. Также для бота нужно выдать администратора.
+
+- Прочее команды для самой игры. Командой !софт, бот вышлет ссылку на софт для FPS и Полезные для игры.
+- Также есть команда !моды, но пока что ничего нету.
+
+- Убран модуль Samp, так как он плохо работает, я полностью от него отказался.
 
 '''
 
 from vk_api import VkApi
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
-from vk_api.keyboard import VkKeyboard, VkKeyboardColor
-from vk_api.utils import get_random_id
-from samp_client.client import SampClient
 from threading import Timer
 from datetime import datetime
 from datetime import timedelta
-from random import randint
 from random import random
 import time
+import json
 
+# =========================================================================================
 
 print('... Запуск бота')
 time.sleep(1)
 
 __author__ = "hoojpop"
 
-# SampClient
-
-with SampClient(address='185.169.134.67', port=7777, rcon_password='password') as client:
-    info1 = client.get_server_info()
-
-with SampClient(address='185.169.134.68', port=7777, rcon_password='password') as client:
-    info2 = client.get_server_info()
-
-with SampClient(address='185.169.134.91', port=7777, rcon_password='password') as client:
-    info3 = client.get_server_info()
-
 # Переменные
 
 now = time.localtime()
+peer_id_ = 2000000000 
+
+'''
+:peer_id_
+Математика. 2000000000 + id беседы. Id беседы можно узнать в ссылке передя в саму беседу. 
+https://vk.com/im?sel= ( c1 ) <-- Это id беседы.
+'''
+
+gang = 'Rifa'
+ip = '185.169.134.68:7777'
+server = 'Evolve 02'
+
+# admins
+
+moder = [0]
+admin = [id's людей, кого хотите поместить в админов]
 
 # Авторизация
 
 print('... Авторизация')
 
-vk_session = VkApi(token='[ ! Токен вашей групы ! ]')
-longpoll = VkBotLongPoll(vk_session, '[ ! Id вашей группы ! ]')
+vk_session = VkApi(token='[ ! Ваш токен ! ]')
+longpoll = VkBotLongPoll(vk_session, '[ ! ID вашей группы ! ]')
 vk = vk_session.get_api()
 
 print('... Бот авторизован')
@@ -140,10 +152,10 @@ class EditChat:
 
 if __name__ == '__main__':
 
-    vkSession = VkApi(token='[ ! Токен вашей групы ! ]')
+    vkSession = VkApi(token='[ ! Ваш токен ! ]')
     vk = vkSession.get_api()
 
-    chat_id_ = 2
+    chat_id_ = [ ! ID вашей беседы ! ]
 
     # ========================================================================================================
 
@@ -173,15 +185,16 @@ if __name__ == '__main__':
     t = CustomTimer(vk, chat_id_, '- Капт закончился, следующий капт в 3:00', delta=delta, interval=86400)
     t.start()
     delta = get_delta(1, 20)
-    c = EditChat(vk, chat_id_, 'ВАШ ТЕКСТ', delta=delta, interval=86400)
+    c = EditChat(vk, chat_id_, '[ ! ВАШ ТЕКСТ ! ]', delta=delta, interval=86400)
     c.start()
+
 
     # ========================================================================================================
 
     delta = get_delta(2, 45)
     t = CustomTimer(vk, chat_id_, '- До капта осталось 15 минут, все заходим!', delta=delta, interval=86400)
     t.start()
-
+    
     delta = get_delta(2, 50)
     t = CustomTimer(vk, chat_id_, '- До капта осталось 10 минут!', delta=delta, interval=86400)
     t.start()
@@ -190,11 +203,11 @@ if __name__ == '__main__':
     t = CustomTimer(vk, chat_id_, '- Капт начался, заходим!', delta=delta, interval=86400)
     t.start()
 
-    delta = get_delta(2, 20)
+    delta = get_delta(3, 20)
     t = CustomTimer(vk, chat_id_, '- Капт закончился, следующий капт в 5:00, после рестарта.', delta=delta, interval=86400)
     t.start()
-    delta = get_delta(2, 20)
-    c = EditChat(vk, chat_id_, 'ВАШ ТЕКСТ', delta=delta, interval=86400)
+    delta = get_delta(3, 20)
+    c = EditChat(vk, chat_id_, '[ ! ВАШ ТЕКСТ ! ]', delta=delta, interval=86400)
     c.start()
 
     # ========================================================================================================
@@ -215,7 +228,7 @@ if __name__ == '__main__':
     t = CustomTimer(vk, chat_id_, '- Капт закончился, следующий капт в 7:00', delta=delta, interval=86400)
     t.start()
     delta = get_delta(5, 20)
-    c = EditChat(vk, chat_id_, 'ВАШ ТЕКСТ', delta=delta, interval=86400)
+    c = EditChat(vk, chat_id_, '[ ! ВАШ ТЕКСТ ! ]', delta=delta, interval=86400)
     c.start()
 
     # ========================================================================================================
@@ -223,7 +236,7 @@ if __name__ == '__main__':
     delta = get_delta(6, 45)
     t = CustomTimer(vk, chat_id_, '- До капта осталось 15 минут, все заходим!', delta=delta, interval=86400)
     t.start()
-    
+
     delta = get_delta(6, 50)
     t = CustomTimer(vk, chat_id_, '- До капта осталось 10 минут, готовимся!', delta=delta, interval=86400)
     t.start()
@@ -236,7 +249,7 @@ if __name__ == '__main__':
     t = CustomTimer(vk, chat_id_, '- Капт закончился, следующий капт в 9:00', delta=delta, interval=86400)
     t.start()
     delta = get_delta(7, 20)
-    c = EditChat(vk, chat_id_, 'ВАШ ТЕКСТ', delta=delta, interval=86400)
+    c = EditChat(vk, chat_id_, '[ ! ВАШ ТЕКСТ ! ]', delta=delta, interval=86400)
     c.start()
 
     # ========================================================================================================
@@ -244,9 +257,6 @@ if __name__ == '__main__':
     delta = get_delta(8, 45)
     t = CustomTimer(vk, chat_id_, '- До капта осталось 15 минут, все заходим!', delta=delta, interval=86400)
     t.start()
-    delta = get_delta(8, 45)
-    c = EditChat(vk, chat_id_, 'ВАШ ТЕКСТ', delta=delta, interval=86400)
-    c.start()
 
     delta = get_delta(8, 50)
     t = CustomTimer(vk, chat_id_, '- До капта осталось 10 минут, готовимся!', delta=delta, interval=86400)
@@ -260,7 +270,7 @@ if __name__ == '__main__':
     t = CustomTimer(vk, chat_id_, '- Капт закончился, следующий капт в 11:00', delta=delta, interval=86400)
     t.start()
     delta = get_delta(9, 20)
-    c = EditChat(vk, chat_id_, 'ВАШ ТЕКСТ', delta=delta, interval=86400)
+    c = EditChat(vk, chat_id_, '[ ! ВАШ ТЕКСТ ! ]', delta=delta, interval=86400)
     c.start()
 
     # ========================================================================================================
@@ -281,7 +291,7 @@ if __name__ == '__main__':
     t = CustomTimer(vk, chat_id_, '- Капт закончился, следующий капт в 13:00', delta=delta, interval=86400)
     t.start()
     delta = get_delta(11, 20)
-    c = EditChat(vk, chat_id_, 'ВАШ ТЕКСТ', delta=delta, interval=86400)
+    c = EditChat(vk, chat_id_, '[ ! ВАШ ТЕКСТ ! ]', delta=delta, interval=86400)
     c.start()
 
     # ========================================================================================================
@@ -302,7 +312,7 @@ if __name__ == '__main__':
     t = CustomTimer(vk, chat_id_, '- Капт закончился, следующий капт в 15:00', delta=delta, interval=86400)
     t.start()
     delta = get_delta(13, 20)
-    c = EditChat(vk, chat_id_, 'ВАШ ТЕКСТ', delta=delta, interval=86400)
+    c = EditChat(vk, chat_id_, '[ ! ВАШ ТЕКСТ ! ]', delta=delta, interval=86400)
     c.start()
 
     # ========================================================================================================
@@ -323,7 +333,7 @@ if __name__ == '__main__':
     t = CustomTimer(vk, chat_id_, '- Капт закончился, следующий капт в 17:00', delta=delta, interval=86400)
     t.start()
     delta = get_delta(15, 20)
-    c = EditChat(vk, chat_id_, 'ВАШ ТЕКСТ', delta=delta, interval=86400)
+    c = EditChat(vk, chat_id_, '[ ! ВАШ ТЕКСТ ! ]', delta=delta, interval=86400)
     c.start()
 
     # ========================================================================================================
@@ -344,7 +354,7 @@ if __name__ == '__main__':
     t = CustomTimer(vk, chat_id_, '- Капт закончился, следующий капт в 19:00', delta=delta, interval=86400)
     t.start()
     delta = get_delta(17, 20)
-    c = EditChat(vk, chat_id_, 'ВАШ ТЕКСТ', delta=delta, interval=86400)
+    c = EditChat(vk, chat_id_, '[ ! ВАШ ТЕКСТ ! ]', delta=delta, interval=86400)
     c.start()
 
     # ========================================================================================================
@@ -365,7 +375,7 @@ if __name__ == '__main__':
     t = CustomTimer(vk, chat_id_, '- Капт закончился, следующий капт в 21:00', delta=delta, interval=86400)
     t.start()
     delta = get_delta(19, 20)
-    c = EditChat(vk, chat_id_, 'ВАШ ТЕКСТ', delta=delta, interval=86400)
+    c = EditChat(vk, chat_id_, '[ ! ВАШ ТЕКСТ ! ]', delta=delta, interval=86400)
     c.start()
 
     # ========================================================================================================
@@ -386,7 +396,7 @@ if __name__ == '__main__':
     t = CustomTimer(vk, chat_id_, '- Капт закончился, следующий капт в 23:00', delta=delta, interval=86400)
     t.start()
     delta = get_delta(21, 20)
-    c = EditChat(vk, chat_id_, 'ВАШ ТЕКСТ', delta=delta, interval=86400)
+    c = EditChat(vk, chat_id_, '[ ! ВАШ ТЕКСТ ! ]', delta=delta, interval=86400)
     c.start()
 
     # ========================================================================================================
@@ -407,7 +417,7 @@ if __name__ == '__main__':
     t = CustomTimer(vk, chat_id_, '- Капт закончился, следующий капт в 1:00, удачных ночных каптов.', delta=delta, interval=86400)
     t.start()
     delta = get_delta(23, 20)
-    c = EditChat(vk, chat_id_, 'ВАШ ТЕКСТ', delta=delta, interval=86400)
+    c = EditChat(vk, chat_id_, '[ ! ВАШ ТЕКСТ ! ]', delta=delta, interval=86400)
     c.start()
 
 # ========================================================================================================
@@ -421,19 +431,41 @@ for event in longpoll.listen():
     if event.type == VkBotEventType.MESSAGE_NEW and event.from_chat:
 
         request = event.object.get('text')
+        user_id = event.object.get('from_id')
+        peer_id = event.object.get('peer_id')
         chat_id = event.chat_id
 
-        if request == "!evolve01":
-            write_msg(vk, chat_id,
-                      'Информация о сервере Evolve 01: ' + '\n\nНазвание: ' + str(info1.hostname)+ '\nIP: 185.169.134.67' + '\nИгроки: ' + str(
-                          info1.players))
+        if request == "!сервер":
 
-        if request == "!evolve02":
-            write_msg(vk, chat_id,
-                      'Информация о сервере Evolve 02: ' + '\n\nНазвание: ' + str(info2.hostname)+ '\nIP: 185.169.134.68' + '\nИгроки: ' + str(
-                          info2.players))
+            write_msg(vk, chat_id, '- Мы играем на сервере: '+ server + '\n- IP: '+ ip + '\n- Банда: ' + gang)
 
-        if request == "!evolve03":
-            write_msg(vk, chat_id,
-                      'Информация о сервере Evolve 03: ' + '\n\nНазвание: ' + str(info3.hostname)+ '\nIP: 185.169.134.91' + '\nИгроки: ' + str(
-                          info3.players))
+        if request[0:2] == "@ " and user_id in admin:
+
+            try:
+                editChat_(vk, chat_id, request[2:])
+            except:
+                write_msg(vk, chat_id, '- Я не могу менять название беседы, попробуй выдать мне администратора.')
+
+            if request[0:2] == "@ " and not user_id in admin:
+
+                write_msg(vk, chat_id, '- Вам запрещенно пользоваться данной командой.')
+
+        if request == "!софт":
+
+            write_msg(vk, chat_id, '- FPS UPs: https://vk.cc/9wk47y' + '\n - Полезное: https://vk.cc/9wkaQg')
+
+        if request == "!моды":
+
+            write_msg(vk, chat_id, '- Моды: Чуть позже.')
+
+        if request[0:5] == "!кик " and user_id in admin:
+
+            try:
+                vk.messages.removeChatUser(chat_id=chat_id, user_id=request[5:])
+            except:
+                write_msg(vk, chat_id, '- Шо то не так, попробуй указать правильный ID пользователя.')
+
+        if request == "!кик " and not user_id in admin:
+
+            write_msg(vk, chat_id, '- Вам запрещено пользоваться данной командой')
+
